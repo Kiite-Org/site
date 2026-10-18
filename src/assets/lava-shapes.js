@@ -16,7 +16,7 @@ const POOL = ["Circle", "Cookie4Sided", "Cookie6Sided", "Cookie7Sided", "Cookie9
 // One layer per color, at low opacity like caelestia's. Shapes only merge within a layer, so
 // three colors (not caelestia's four) keep merges frequent enough to read as a lava lamp.
 const LAYERS = [["--primary-container", 0.24], ["--secondary-container", 0.22], ["--tertiary-container", 0.22]];
-const MAX_BLOBS = 24;
+const MAX_BLOBS = 48;
 const CELL = 64;          // field resolution per shape
 const DOMAIN = 2;         // a cell covers [-0.5, 1.5] of the shape's unit box, for room to merge
 const MERGE = 44;         // fillet radius in CSS px (the lava lamp's smoothing)
@@ -185,9 +185,9 @@ export function startLavaShapes(canvas) {
   // Like caelestia: sizes spread from small to large, slow drift, gentle turning.
   function spawn() {
     const vmin = Math.min(W, H);
-    const count = Math.max(8, Math.min(18, Math.round((W * H) / 120000)));
+    const count = Math.max(14, Math.min(MAX_BLOBS, Math.round((W * H) / 52000)));
     blobs = Array.from({ length: count }, (_, i) => {
-      const size = vmin * (0.07 + (i / count) * 0.17);
+      const size = vmin * (0.05 + (i / count) * 0.15);
       const vx = signed(6, 24), vy = signed(6, 24);
       const shape = Math.floor(Math.random() * POOL.length);
       return {
