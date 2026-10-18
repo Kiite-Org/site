@@ -29,6 +29,7 @@ npm run build    # writes dist/
 | `src/assets/base.css` | Colour tokens and shared styles |
 | `src/assets/landing.*`, `src/assets/docs.*` | Each half's styles and scripts |
 | `tools/export-shapes.rs` | Regenerates `shape-paths.js` from `gpui-material` |
+| `tools/og-card.html`, `tools/og-image.sh` | The link preview image (`src/assets/og.png`) and the script that renders it |
 
 ### Adding a docs page
 

@@ -59,6 +59,7 @@ jobs:
         env:
           KIITE_DIR: KiiteShell
           SITE_BASE: ${{ steps.pages.outputs.base_path }}/
+          SITE_URL: ${{ steps.pages.outputs.base_url }}/
 
       - uses: actions/upload-pages-artifact@v3
         with:

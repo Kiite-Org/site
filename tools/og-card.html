@@ -1,0 +1,45 @@
+<!doctype html>
+<!-- The link preview image (src/assets/og.png), 1200×630. Regenerate with tools/og-image.sh. -->
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&display=block" rel="stylesheet">
+<link rel="stylesheet" href="../src/assets/base.css">
+<style>
+html, body { width: 1200px; height: 630px; overflow: hidden; }
+body { background: var(--surface); color: var(--on-surface); font-family: "Roboto Flex", sans-serif; position: relative; }
+.copy { position: absolute; left: 72px; top: 0; bottom: 0; width: 600px; display: flex; flex-direction: column; justify-content: center; gap: 28px; }
+.brand { display: flex; align-items: center; gap: 14px; font-size: 34px; font-weight: 760; font-variation-settings: "wdth" 120; }
+.brand m3-shape { width: 46px; height: 46px; color: var(--primary); }
+h1 { font-size: 92px; font-weight: 820; font-variation-settings: "wdth" 125, "opsz" 144; letter-spacing: -.035em; line-height: .94; }
+h1 .accent { color: var(--primary); }
+h1 .pink { color: var(--secondary); font-style: italic; font-weight: 900; font-variation-settings: "wdth" 70, "opsz" 144; }
+p { font-size: 27px; line-height: 1.35; color: var(--on-surface-variant); max-width: 25ch; }
+.stage { position: absolute; right: 40px; top: 50%; translate: 0 -50%; width: 500px; height: 500px; }
+.stage m3-shape, .stage .art { position: absolute; }
+.halo { inset: 0; color: var(--primary-container); }
+.art { inset: 6%; background: url(../src/assets/wallpaper.jpg) 38% 40% / cover; }
+.o1 { width: 104px; height: 104px; left: -10px; top: 40px; color: var(--secondary); rotate: -10deg; }
+.o2 { width: 76px; height: 76px; right: 0; bottom: 30px; color: var(--tertiary); }
+.o3 { width: 56px; height: 56px; right: 30px; top: 16px; color: var(--primary); }
+</style>
+</head>
+<body>
+  <div class="copy">
+    <div class="brand"><m3-shape shape="Cookie9Sided"></m3-shape>KiiteShell</div>
+    <h1>Your desktop, <span class="accent">in every</span> <span class="pink">shape.</span></h1>
+    <p>A Material 3 Expressive shell for Hyprland, written in Rust.</p>
+  </div>
+  <div class="stage">
+    <m3-shape class="halo" shape="SoftBurst"></m3-shape>
+    <div class="art" data-clip="Cookie12Sided"></div>
+    <m3-shape class="o1" shape="Clover4Leaf"></m3-shape>
+    <m3-shape class="o2" shape="Pill"></m3-shape>
+    <m3-shape class="o3" shape="VerySunny"></m3-shape>
+  </div>
+<script type="module">
+import { wireClips } from "../src/assets/shapes.js";
+wireClips();
+</script>
+</body>
+</html>

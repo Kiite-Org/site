@@ -21,6 +21,9 @@ const REPO = "https://github.com/Kiite-Org/KiiteShell";
 // Where the site is served from. GitHub Pages serves a project site under /<repo>/.
 // Only the 404 page needs it: every other page links relatively.
 const BASE = process.env.SITE_BASE || "/";
+// The site's public address, for link previews (Discord, Slack, Mastodon…), which need
+// absolute URLs.
+const SITE_URL = (process.env.SITE_URL || "https://kiite-org.github.io/site").replace(/\/?$/, "/");
 const BRANCH = "main";
 
 // ---------------------------------------------------------------------------------------------
@@ -290,7 +293,26 @@ const FONTS = `<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&family=Roboto+Mono:wght@400;500;600&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,500,1,0&display=swap" rel="stylesheet">`;
 
-function shell({ root, title, description, rail, current, content, toc = "" }) {
+// Open Graph and Twitter tags, so shared links unfurl into a card with the preview image.
+// `rel` is the page's path from the site root.
+function socialMeta({ title, description, rel }) {
+  const image = path.join(SRC, "assets/og.png");
+  const v = crypto.createHash("sha256").update(fs.readFileSync(image)).digest("hex").slice(0, 10);
+  return `<link rel="canonical" href="${SITE_URL}${rel}">
+<meta name="theme-color" content="#b2d17f">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="KiiteShell">
+<meta property="og:title" content="${esc(title)}">
+<meta property="og:description" content="${esc(description)}">
+<meta property="og:url" content="${SITE_URL}${rel}">
+<meta property="og:image" content="${SITE_URL}assets/og.png?v=${v}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="KiiteShell: your desktop, in every shape.">
+<meta name="twitter:card" content="summary_large_image">`;
+}
+
+function shell({ root, title, description, rail, current, content, toc = "", rel = "" }) {
   const railLink = (key, href, icon, label) =>
     `<a href="${href}"${rail === key ? ' aria-current="page"' : ""}><span class="ind"><span class="sym">${icon}</span></span>${label}</a>`;
   const drawer = NAV.map((g) => `
@@ -306,6 +328,7 @@ function shell({ root, title, description, rail, current, content, toc = "" }) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
+${socialMeta({ title, description, rel })}
 <script>try{const t=localStorage.getItem("kiite-docs-theme");if(t)document.documentElement.dataset.theme=t}catch{}</script>
 ${FONTS}
 <link rel="icon" href="${root}assets/favicon.svg">
@@ -400,6 +423,7 @@ ${html}
       </aside>`;
   return shell({
     root, title: `${page.title} · Kiite Docs`, description: page.blurb, rail: page.group.rail, current: page,
+    rel: `docs/${page.slug}/`,
     content, toc: tocHtml,
   });
 }
@@ -424,7 +448,10 @@ function docsHome() {
             </div>
           </section>`).join("\n          ")}
         </div>`;
-  return shell({ root, title: "Kiite Docs", description: "KiiteShell documentation.", rail: "docs", content });
+  return shell({
+    root, title: "Kiite Docs", rail: "docs", content, rel: "docs/",
+    description: "Installing and configuring KiiteShell, how each part of it works, and how it's put together.",
+  });
 }
 
 function landing() {
@@ -434,7 +461,12 @@ function landing() {
     const p = bySlug[slug];
     return `      <a class="doc" href="docs/${slug}/" data-hover-root><span class="ic"><m3-shape shape="${shape}" hover="${hover}"></m3-shape><span class="sym">${p.icon}</span></span><span><b>${esc(p.title)}</b><small>${esc(p.blurb)}</small></span></a>`;
   }).join("\n");
-  return tpl.replace("<!-- @docs-cards -->", cards);
+  const meta = socialMeta({
+    title: "KiiteShell",
+    description: "A Material 3 Expressive desktop shell for Hyprland, written in Rust on GPUI. Bar, dock, launcher, lock screen, widgets and an AI assistant, all colored by your wallpaper.",
+    rel: "",
+  });
+  return tpl.replace("<!-- @docs-cards -->", cards).replace("<!-- @social -->", meta);
 }
 
 function notFound() {
