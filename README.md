@@ -26,6 +26,7 @@ npm run build    # writes dist/
 | `src/assets/shape-paths.js` | The 35 shape outlines, exported from `gpui-material` |
 | `src/assets/base.css` | Color tokens and shared styles |
 | `src/assets/landing.*`, `src/assets/docs.*` | Each half's styles and scripts |
+| `src/contributor-logins.json` | GitHub accounts for contributors who commit from a non-GitHub email (keyed by the email's SHA-256) |
 | `tools/export-shapes.rs` | Regenerates `shape-paths.js` from `gpui-material` |
 | `tools/og-card.html`, `tools/og-image.sh` | The link preview image (`src/assets/og.png`) and its renderer |
 
@@ -43,6 +44,16 @@ The shapes are the shell's own (from `gpui-material`):
   to morph on hover, or `morph="Flower,Burst" interval="2400"` to cycle.
 - `data-clip="Cookie9Sided"` on any element to clip it, plus `data-clip-hover="Flower"` to
   morph the clip on hover.
+
+### Contributors
+
+The landing page's contributors come from KiiteShell's git history. GitHub no-reply addresses
+map to accounts on their own; for anyone else, the build warns and shows initials until their
+address is added to `src/contributor-logins.json`:
+
+```sh
+node -e 'console.log(require("crypto").createHash("sha256").update(process.argv[1].toLowerCase()).digest("hex"))' them@example.com
+```
 
 ## Deploying
 

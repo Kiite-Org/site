@@ -1,6 +1,7 @@
 // Builds dist/: the landing page, plus a docs page for each file in KiiteShell's docs/ and for
 // the README sections listed in NAV. Reads KiiteShell from ../KiiteShell, or from KIITE_DIR.
 
+import { execFileSync } from "node:child_process";
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
@@ -433,6 +434,54 @@ function docsHome() {
   });
 }
 
+// Contributors to KiiteShell, most commits first, from its git history. Commits are grouped by
+// GitHub account: GitHub no-reply addresses name it, and src/contributor-logins.json maps
+// other addresses (stored as SHA-256 hashes, since this repo is public) to accounts.
+function contributors() {
+  let log;
+  try {
+    log = execFileSync("git", ["-C", KIITE_DIR, "log", "--no-merges", "--format=%aN%x00%aE", "HEAD"], { encoding: "utf8" });
+  } catch {
+    console.warn("No KiiteShell history: the contributors section is left out.");
+    return [];
+  }
+  const logins = JSON.parse(fs.readFileSync(path.join(SRC, "contributor-logins.json"), "utf8"));
+  const people = new Map();
+  for (const line of log.split("\n").filter(Boolean)) {
+    const [name, email] = line.split("\0");
+    const addr = email.toLowerCase();
+    const login = email.match(/^(?:\d+\+)?([^@]+)@users\.noreply\.github\.com$/i)?.[1]
+      ?? logins[crypto.createHash("sha256").update(addr).digest("hex")];
+    const key = login ? login.toLowerCase() : `?${addr}`;
+    if (!people.has(key)) {
+      if (!login) console.warn(`Contributor "${name}" has no GitHub account mapped: add their address to src/contributor-logins.json.`);
+      people.set(key, { login: login ?? null, name, commits: 0 });
+    }
+    people.get(key).commits++;
+  }
+  return [...people.values()].sort((a, b) => b.commits - a.commits || (a.login ?? a.name).localeCompare(b.login ?? b.name));
+}
+
+// Avatar shapes, in rank order.
+const STAR_SHAPES = [["Cookie12Sided", "Flower"], ["Cookie9Sided", "Clover8Leaf"], ["Flower", "Cookie7Sided"],
+  ["Clover4Leaf", "Cookie4Sided"], ["Sunny", "VerySunny"], ["Puffy", "PuffyDiamond"], ["Gem", "Pentagon"],
+  ["Cookie7Sided", "SoftBurst"], ["Heart", "Bun"], ["Cookie6Sided", "Clover4Leaf"]];
+
+function constellation(people) {
+  if (!people.length) return "";
+  return people.map((p, i) => {
+    const [shape, hover] = STAR_SHAPES[i % STAR_SHAPES.length];
+    const who = p.login ?? p.name;
+    const commits = `${p.commits} commit${p.commits === 1 ? "" : "s"}`;
+    const face = p.login
+      ? `<img src="https://avatars.githubusercontent.com/${encodeURIComponent(p.login)}?s=240" alt="" loading="lazy" decoding="async">`
+      : `<span class="initials">${esc(p.name.split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase())}</span>`;
+    const tag = p.login ? "a" : "span";
+    const href = p.login ? ` href="https://github.com/${encodeURIComponent(p.login)}"` : "";
+    return `      <${tag} class="star"${href} data-hover-root aria-label="${esc(who)}, ${commits}"><span class="face" data-clip="${shape}" data-clip-hover="${hover}">${face}</span><span class="tag"><b>${esc(who)}</b>${commits}</span></${tag}>`;
+  }).join("\n");
+}
+
 function landing() {
   const tpl = fs.readFileSync(path.join(SRC, "index.html"), "utf8");
   const bySlug = Object.fromEntries(PAGES.map((p) => [p.slug, p]));
@@ -445,7 +494,11 @@ function landing() {
     description: "A Material 3 Expressive desktop shell for Hyprland, written in Rust on GPUI. Bar, dock, launcher, lock screen, widgets and an AI assistant, all colored by your wallpaper.",
     rel: "",
   });
-  return tpl.replace("<!-- @docs-cards -->", cards).replace("<!-- @social -->", meta);
+  const stars = constellation(contributors());
+  return tpl.replace("<!-- @docs-cards -->", cards).replace("<!-- @social -->", meta)
+    .replace("<!-- @contributors -->", stars)
+    // No history, no section.
+    .replace(/<section id="contributors">[\s\S]*?<\/section>\n*/, (m) => (stars ? m : ""));
 }
 
 function notFound() {

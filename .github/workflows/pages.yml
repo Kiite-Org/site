@@ -34,6 +34,9 @@ jobs:
           repository: Kiite-Org/KiiteShell
           ssh-key: ${{ secrets.KIITESHELL_DEPLOY_KEY }}
           path: KiiteShell
+          # Full history (without file contents) for the contributors section.
+          fetch-depth: 0
+          filter: blob:none
           sparse-checkout: |
             README.md
             docs

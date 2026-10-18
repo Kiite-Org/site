@@ -1,6 +1,7 @@
 // The landing page: hero morph, shape ribbon, the media-shape demo and copy buttons.
 import { SHAPES, SHAPE_NAMES, wireClips, morphableClip, morphPath } from "./shapes.js";
 import { startLavaShapes } from "./lava-shapes.js";
+import { startConstellation } from "./constellation.js";
 
 wireClips();
 
@@ -97,3 +98,6 @@ document.getElementById("tour-play").addEventListener("click", () => {
 const lava = document.getElementById("lava");
 const startLava = () => { try { startLavaShapes(lava); } catch (e) { console.warn("Background shapes unavailable:", e); } };
 "requestIdleCallback" in window ? requestIdleCallback(startLava, { timeout: 800 }) : setTimeout(startLava, 200);
+
+const stars = document.getElementById("constellation");
+if (stars) startConstellation(stars);

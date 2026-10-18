@@ -171,6 +171,30 @@ pre { background: var(--surface-container-lowest); border-radius: 20px; padding:
 pre .c { color: var(--outline); } pre .k { color: var(--primary); }
 @media (max-width: 900px) { .steps { grid-template-columns: 1fr; } }
 
+/* Contributors (constellation.js). Without JS the stars are a row of avatars. */
+.constellation { position: relative; display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; }
+.constellation .sky { display: none; }
+.constellation.laid-out { display: block; }
+.constellation.laid-out .sky { display: block; position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.sky line { stroke: var(--outline-variant); stroke-width: 1.5; stroke-dasharray: 2 6; stroke-linecap: round; transition: stroke .3s; }
+.sky line.lit { stroke: var(--primary); stroke-dasharray: none; }
+.sky circle { fill: var(--on-surface-variant); opacity: .5; animation: twinkle 4s ease-in-out infinite; }
+@keyframes twinkle { 50% { opacity: .08; } }
+.star { position: relative; display: block; width: 72px; height: 72px; }
+.laid-out .star { position: absolute; }
+.star:hover, .star:focus-visible { z-index: 3; }
+.star .face { display: block; width: 100%; height: 100%; background: var(--surface-container-high); container-type: inline-size; transition: scale .5s var(--spring); }
+.star:hover .face, .star:focus-visible .face { scale: 1.08; }
+.star img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.star .initials { display: grid; place-items: center; width: 100%; height: 100%; font-weight: 800; font-size: 34cqi; background: var(--secondary-container); color: var(--on-secondary-container); }
+.star .tag {
+  position: absolute; left: 50%; top: calc(100% + 8px); translate: -50% 0; z-index: 2; white-space: nowrap;
+  padding: 6px 12px; border-radius: 14px; background: var(--surface-container-highest); color: var(--on-surface-variant);
+  font-size: 13px; opacity: 0; pointer-events: none; transition: opacity .2s, translate .35s var(--spring);
+}
+.star .tag b { color: var(--on-surface); margin-right: 6px; }
+.star:hover .tag, .star:focus-visible .tag { opacity: 1; translate: -50% -4px; }
+
 /* Docs teaser */
 .docs { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
 .doc {
