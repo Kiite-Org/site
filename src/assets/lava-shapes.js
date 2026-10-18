@@ -188,7 +188,10 @@ export function startLavaShapes(canvas) {
   }
 
   function resize() {
-    const w = innerWidth, h = innerHeight;
+    // The canvas's own size (CSS 100lvh), so a phone's address bar doesn't resize it. Small
+    // height changes are ignored too; rotating or resizing the window still re-lays it out.
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    if (W && w === W && Math.abs(h - H) < 120) return;
     // Render below native resolution: the shapes are soft and translucent.
     scale = Math.min(devicePixelRatio || 1, 2) * 0.6;
     canvas.width = Math.round(w * scale);

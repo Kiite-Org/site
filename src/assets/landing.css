@@ -2,11 +2,14 @@
 :root { --gutter: clamp(16px, 4vw, 48px); }
 html { scroll-behavior: smooth; }
 body {
+  overflow-x: clip;
   background: var(--surface); color: var(--on-surface);
   font: 400 17px/1.55 "Roboto Flex", system-ui, sans-serif;
 }
 /* Floating shapes behind everything (lava-shapes.js). */
-.lava { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; opacity: 0; transition: opacity 1.2s ease; }
+/* 100lvh: the tallest the viewport gets, so the canvas doesn't resize as a phone's address bar
+   shows and hides. */
+.lava { position: fixed; top: 0; left: 0; width: 100%; height: 100lvh; z-index: -1; pointer-events: none; opacity: 0; transition: opacity 1.2s ease; }
 .lava.ready { opacity: 1; }
 
 .wrap { max-width: 1280px; margin: 0 auto; padding: 0 var(--gutter); }
@@ -46,7 +49,8 @@ body {
 @media (max-width: 760px) { .topbar nav { display: none; } .topbar .btn { margin-left: auto; } }
 
 /* Hero */
-.hero { padding: 120px 0 40px; position: relative; }
+/* Clipped: the spinning halo's corners would otherwise widen the page on phones. */
+.hero { padding: 120px 0 40px; position: relative; overflow-x: clip; }
 .hero-grid { display: grid; grid-template-columns: 1.1fr 1fr; align-items: center; gap: 24px; }
 .hero-grid > * { min-width: 0; }
 /* Sized to the column, so "desktop," never breaks mid-word. */
@@ -129,6 +133,11 @@ section { padding: 72px 0; }
 .span-7 { grid-column: span 7; } .span-5 { grid-column: span 5; } .span-4 { grid-column: span 4; }
 .span-8 { grid-column: span 8; } .span-6 { grid-column: span 6; } .tall { min-height: 360px; }
 @media (max-width: 900px) { .bento > * { grid-column: span 12; } }
+/* On phones the icon sits above the card's content instead of over it. */
+@media (max-width: 600px) {
+  .card .glyph { position: relative; top: auto; right: auto; width: 76px; height: 76px; margin-bottom: auto; }
+  .card .glyph .sym { font-size: 32px; }
+}
 
 /* Launcher prefixes as shaped keys */
 .prefixes { display: flex; flex-wrap: wrap; gap: 10px; margin: 8px 0 14px; }
