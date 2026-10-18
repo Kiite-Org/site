@@ -5,7 +5,7 @@ installClipPaths();
 const root = document.documentElement;
 const siteRoot = document.body.dataset.root || "";
 
-// ---------- On this page: the marker hops between headings and changes shape on the way ----------
+// On this page: highlight the current heading, and move the marker to it.
 const links = [...document.querySelectorAll("#toc a[href^='#']")];
 const marker = document.getElementById("marker");
 const MARKER_SHAPES = ["Cookie4Sided", "Clover4Leaf", "Sunny", "Flower", "Puffy", "Gem"];
@@ -29,7 +29,7 @@ if (marker) {
   spy();
 }
 
-// ---------- Theme: follows the OS until you pick one ----------
+// Theme: follows the OS until you pick one
 const THEME_KEY = "kiite-docs-theme";
 try {
   const saved = localStorage.getItem(THEME_KEY);
@@ -41,13 +41,13 @@ document.getElementById("theme")?.addEventListener("click", () => {
   try { localStorage.setItem(THEME_KEY, root.dataset.theme); } catch {}
 });
 
-// ---------- Drawer on narrow screens ----------
+// Drawer on narrow screens
 const drawer = document.getElementById("drawer");
 document.getElementById("menu")?.addEventListener("click", (e) => { e.stopPropagation(); drawer.classList.toggle("open"); });
 document.addEventListener("click", (e) => { if (!drawer.contains(e.target)) drawer.classList.remove("open"); });
 document.getElementById("search-fab")?.addEventListener("click", (e) => { e.stopPropagation(); openSearch(); });
 
-// ---------- Copy buttons on code blocks ----------
+// Copy buttons on code blocks
 for (const b of document.querySelectorAll(".code .copy")) {
   b.addEventListener("click", async () => {
     try {
@@ -59,7 +59,7 @@ for (const b of document.querySelectorAll(".code .copy")) {
   });
 }
 
-// ---------- Search ----------
+// Search
 const input = document.getElementById("search");
 const results = document.getElementById("results");
 let index = null;

@@ -1,8 +1,5 @@
-# Builds the site from KiiteShell's docs and publishes it to GitHub Pages.
-#
-# Runs on every push to main, and whenever KiiteShell's docs change: KiiteShell's
-# site-docs workflow then force-pushes docs-sync here (main plus a marker commit).
-# It also runs once a day, as a fallback, and on demand.
+# Builds the site and deploys it to GitHub Pages. Runs on pushes to main, on pushes to docs-sync
+# (KiiteShell pushes it when its docs change), daily, and on demand.
 name: Pages
 
 on:
@@ -25,14 +22,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # Always the site's main, even when docs-sync started the run: that branch only adds
-      # a marker.
+      # Build main, even when docs-sync started the run.
       - uses: actions/checkout@v4
         with:
           ref: main
 
-      # KiiteShell is private, so this needs a read-only deploy key on that repo, with the
-      # private half saved here as the KIITESHELL_DEPLOY_KEY secret.
+      # KiiteShell is private: read it with a deploy key (secret KIITESHELL_DEPLOY_KEY).
       - name: Check out KiiteShell for its docs
         uses: actions/checkout@v4
         with:

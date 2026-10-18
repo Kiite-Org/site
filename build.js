@@ -1,10 +1,5 @@
-// Builds the site into dist/: the landing page, and a docs page for every Markdown file in
-// KiiteShell's docs/ plus the install and configuration sections of its README.
-//
-//   KIITE_DIR=../KiiteShell node build.js
-//
-// The docs are read from a KiiteShell checkout (../KiiteShell by default), so the site
-// always shows what the shell's repo says.
+// Builds dist/: the landing page, plus a docs page for each file in KiiteShell's docs/ and for
+// the README sections listed in NAV. Reads KiiteShell from ../KiiteShell, or from KIITE_DIR.
 
 import crypto from "node:crypto";
 import fs from "node:fs";
@@ -18,17 +13,15 @@ const KIITE_DIR = path.resolve(process.env.KIITE_DIR || path.join(HERE, "../Kiit
 const SRC = path.join(HERE, "src");
 const OUT = path.join(HERE, "dist");
 const REPO = "https://github.com/Kiite-Org/KiiteShell";
-// Where the site is served from. GitHub Pages serves a project site under /<repo>/.
-// Only the 404 page needs it: every other page links relatively.
+// Path the site is served under (/site/ on GitHub Pages). Only the 404 page uses it; the
+// other pages link relatively.
 const BASE = process.env.SITE_BASE || "/";
-// The site's public address, for link previews (Discord, Slack, Mastodon…), which need
-// absolute URLs.
+// Absolute site URL, for the link preview tags.
 const SITE_URL = (process.env.SITE_URL || "https://kiite-org.github.io/site").replace(/\/?$/, "/");
 const BRANCH = "main";
 
-// ---------------------------------------------------------------------------------------------
-// The docs, in reading order. `file` is a page in docs/; `readme` takes those `##` sections
-// from the README instead.
+// Docs pages in reading order. `file` is a file in KiiteShell's docs/; `readme` lists the README
+// `##` sections to use instead.
 
 const NAV = [
   {
@@ -91,14 +84,14 @@ const NAV = [
   },
 ];
 
-// Shown on the landing page, in this order.
+// Docs linked from the landing page: slug, shape, hover shape.
 const LANDING_DOCS = [
   ["install", "Cookie7Sided", "Flower"], ["configuration", "Gem", "Diamond"], ["launcher", "Puffy", "PuffyDiamond"],
   ["desktop", "Arch", "Fan"], ["lock-screen", "Bun", "Pill"], ["kiite-drop", "Clover4Leaf", "Cookie4Sided"],
   ["nothing-x", "Pill", "Bun"], ["architecture", "Sunny", "VerySunny"],
 ];
 
-// Each page's hero gets its own trio of shapes, and its h2s cycle through these.
+// Shapes for page heroes, and for h2s in turn.
 const HERO_SHAPES = [
   ["Cookie12Sided", "Flower", "Clover4Leaf", "Heart", "VerySunny"],
   ["Flower", "Clover8Leaf", "Gem", "Puffy", "Cookie4Sided"],
@@ -111,13 +104,10 @@ const H2_SHAPES = ["Cookie9Sided", "Clover8Leaf", "Gem", "Sunny", "Flower", "Puf
 const PAGES = NAV.flatMap((g) => g.pages.map((p) => ({ ...p, group: g })));
 const BY_FILE = Object.fromEntries(PAGES.filter((p) => p.file).map((p) => [p.file.toLowerCase(), p]));
 
-// ---------------------------------------------------------------------------------------------
-// Helpers
-
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 const stripTags = (s) => s.replace(/<[^>]+>/g, "").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
 
-// GitHub's heading ids, so links like desktop.md#the-tile-layout keep working.
+// GitHub-style heading ids, so links like desktop.md#the-tile-layout still work.
 function slugger() {
   const seen = new Map();
   return (text) => {
@@ -135,13 +125,10 @@ function highlight(code, lang) {
   return esc(code);
 }
 
-// ---------------------------------------------------------------------------------------------
-// Markdown
-
-// Where a README heading id ends up, for README-internal links like #configuration.
+// README heading id -> docs page slug, for links to README sections.
 const readmeIds = new Map();
 
-// Rewrite a link from a source file to where that file lives on the site.
+// Rewrites a link in a source file to the matching site page, or to GitHub.
 function resolveLink(href, from) {
   if (/^([a-z]+:|\/\/)/i.test(href)) return { href, external: true };
   const [rawPath, frag] = href.split("#");
@@ -219,7 +206,7 @@ function renderMarkdown(tokens, page) {
 
   const html = marked.parser(tokens);
 
-  // Plain text per section, for search: a new section starts at each h2 and h3.
+  // Plain text of each h2/h3 section, for the search index.
   const sections = [{ id: "", heading: page.title, text: "" }];
   let k = 0;
   for (const t of tokens) {
@@ -234,9 +221,6 @@ function plain(token) {
   return stripTags((token.raw || "").replace(/\[([^\]]*)\]\([^)]*\)/g, "$1").replace(/[`*_>#|]+/g, " ").replace(/-{3,}/g, " "));
 }
 
-// ---------------------------------------------------------------------------------------------
-// Sources
-
 function readmeSections() {
   const src = fs.readFileSync(path.join(KIITE_DIR, "README.md"), "utf8");
   const tokens = new Lexer({ gfm: true }).lex(src);
@@ -246,7 +230,7 @@ function readmeSections() {
     if (t.type === "heading" && t.depth === 2) { name = t.text; groups.set(name, []); continue; }
     if (name) groups.get(name).push(t);
   }
-  // Drop the rules that separate README sections; they mean nothing on their own page.
+  // Drop the trailing `---` between README sections.
   for (const list of groups.values()) while (list.length && /^(hr|space)$/.test(list.at(-1).type)) list.pop();
   return { groups, links: tokens.links };
 }
@@ -260,7 +244,7 @@ function loadPages() {
       for (const name of page.readme) {
         const part = readme.groups.get(name);
         if (!part) throw new Error(`README has no "## ${name}" section (for ${page.slug})`);
-        // Several sections on one page keep their titles as h2s.
+        // A page made of several sections keeps each section's title as an h2.
         if (page.readme.length > 1) tokens.push(...new Lexer({ gfm: true }).lex(`## ${name}\n`));
         tokens.push(...part);
       }
@@ -278,7 +262,6 @@ function loadPages() {
     page.tokens = tokens;
     page.words = tokens.reduce((n, t) => n + (t.raw || "").split(/\s+/).length, 0);
   }
-  // README heading ids, so README-internal anchors can be pointed at the right page.
   for (const page of PAGES.filter((p) => p.readme)) {
     const slug = slugger();
     for (const name of page.readme) readmeIds.set(slug(name), page.slug);
@@ -286,15 +269,11 @@ function loadPages() {
   }
 }
 
-// ---------------------------------------------------------------------------------------------
-// Templates
-
 const FONTS = `<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&family=Roboto+Mono:wght@400;500;600&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,500,1,0&display=swap" rel="stylesheet">`;
 
-// Open Graph and Twitter tags, so shared links unfurl into a card with the preview image.
-// `rel` is the page's path from the site root.
+// Open Graph and Twitter tags for link previews. `rel` is the page's path from the site root.
 function socialMeta({ title, description, rel }) {
   const image = path.join(SRC, "assets/og.png");
   const v = crypto.createHash("sha256").update(fs.readFileSync(image)).digest("hex").slice(0, 10);
@@ -428,8 +407,8 @@ ${html}
   });
 }
 
-// A docs home card rests in one shape and morphs into its group's shape on hover. When the
-// two would be the same, it morphs into a burst instead, so every card visibly changes.
+// Docs home cards morph into their group's shape on hover, or into a burst if they already
+// have that shape.
 const cardShape = (g, i) => H2_SHAPES[(i + g.group.length) % H2_SHAPES.length];
 const cardHover = (g, i) => (cardShape(g, i) === g.shape ? "SoftBurst" : g.shape);
 
@@ -477,16 +456,13 @@ function notFound() {
   });
 }
 
-// ---------------------------------------------------------------------------------------------
-// Build
-
 function favicon() {
   const d = fs.readFileSync(path.join(SRC, "assets/shape-paths.js"), "utf8").match(/Cookie9Sided: "([^"]+)"/)[1];
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="#b2d17f" d="${d}"/></svg>\n`;
 }
 
-// Shapes used from CSS (list bullets, step numbers) as mask images. A url(#id) clip path in a
-// stylesheet resolves against the stylesheet's URL, so these are data URIs instead.
+// Shapes drawn from CSS (bullets, step numbers), as data URI masks: a url(#id) clip path in a
+// stylesheet would resolve against the stylesheet's URL.
 const CSS_SHAPES = ["Cookie4Sided", "Sunny", "Circle"];
 function shapeMasks() {
   const src = fs.readFileSync(path.join(SRC, "assets/shape-paths.js"), "utf8");
@@ -505,11 +481,9 @@ function write(rel, content) {
   fs.writeFileSync(file, content);
 }
 
-// Cache busting. Pages lets browsers keep files for ten minutes, which after a deploy left
-// visitors with new HTML on old CSS and JS. Every reference to a file in assets/ gets
-// ?v=<hash of its contents>, so a changed file is a new URL. Scripts and stylesheets are
-// rewritten before they're hashed, so a change to shape-paths.js also changes the URLs of
-// shapes.js and of the scripts that import it.
+// Appends ?v=<content hash> to every asset URL, so browsers never reuse a stale file after a
+// deploy (Pages caches for 10 minutes). JS and CSS are rewritten before they're hashed, so a
+// changed import also changes the URLs of the files importing it.
 const ASSET_REF = {
   ".js": /(\bfrom\s*["'])(\.\/[^"'?#]+)(["'])/g,
   ".css": /(url\(\s*["']?)(?!data:|#)([^"')?#]+)(["']?\s*\))/g,
@@ -529,7 +503,7 @@ function fingerprint() {
     const re = ASSET_REF[path.extname(file)];
     const src = fs.readFileSync(file, "utf8");
     const out = src.replace(re, (all, pre, ref, post) => {
-      // The 404 page links from the site's base path, since it's served at any URL.
+      // The 404 page uses absolute paths, since it can be served at any URL.
       const target = ref.startsWith("/") ? path.join(OUT, ref.slice(BASE.length)) : path.resolve(path.dirname(file), ref);
       return fs.existsSync(target) ? `${pre}${ref}?v=${hashOf(target)}${post}` : all;
     });

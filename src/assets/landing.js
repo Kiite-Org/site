@@ -93,7 +93,7 @@ document.getElementById("tour-play").addEventListener("click", () => {
   tourVideo.play().catch(() => {});
 });
 
-// Background shapes: their distance fields take a moment to compute, so start after first paint.
+// Background shapes start after first paint, since computing their fields takes a moment.
 const lava = document.getElementById("lava");
 const startLava = () => { try { startLavaShapes(lava); } catch (e) { console.warn("Background shapes unavailable:", e); } };
 "requestIdleCallback" in window ? requestIdleCallback(startLava, { timeout: 800 }) : setTimeout(startLava, 200);

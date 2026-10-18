@@ -1,20 +1,12 @@
-// Floating background shapes that melt into each other.
-//
-// The motion is caelestia's media tab: shapes drift at a slow constant speed, turn gently and
-// wrap around the edges, in the container colors at low opacity. The rendering is Kiite's lava
-// lamp: every shape is a signed distance field, shapes of one color merge with the same
-// circular smooth minimum when they meet, and a shape morphs by blending its field into
-// another's.
-//
-// Each shape's field is computed once, here, from the gpui-material outlines, and packed into a
-// texture; a fragment shader merges them per pixel.
+// Background shapes that drift like caelestia's dashboard media tab, and merge and morph like
+// Kiite's lava lamp. Each shape is a signed distance field (computed once, stored in a texture);
+// same-color shapes are combined with a smooth minimum, and a morph blends two fields.
 import { SHAPES } from "./shape-paths.js";
 
-// Caelestia's media tab pool.
+// Shape pool, from caelestia's media tab.
 const POOL = ["Circle", "Cookie4Sided", "Cookie6Sided", "Cookie7Sided", "Cookie9Sided", "Cookie12Sided", "Sunny",
   "VerySunny", "SoftBurst", "Pentagon", "Gem", "Arch", "Arrow", "Pill", "Triangle", "Fan", "Oval"];
-// One layer per color, at low opacity like caelestia's. Shapes only merge within a layer, so
-// three colors (not caelestia's four) keep merges frequent enough to read as a lava lamp.
+// Color and opacity per layer. Shapes only merge with shapes in the same layer.
 const LAYERS = [["--primary-container", 0.24], ["--secondary-container", 0.22], ["--tertiary-container", 0.22]];
 const MAX_BLOBS = 48;
 const CELL = 64;          // field resolution per shape
@@ -25,8 +17,7 @@ const MORPH_SECONDS = 2;
 const rand = (a, b) => a + Math.random() * (b - a);
 const signed = (a, b) => rand(a, b) * (Math.random() < 0.5 ? -1 : 1);
 
-// ---------- Distance fields ----------
-
+// Distance fields
 function outline(name, n = 220) {
   const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
   path.setAttribute("d", SHAPES[name]);
@@ -62,8 +53,7 @@ function field(pts, out, offset, stride) {
   }
 }
 
-// ---------- GL ----------
-
+// GL
 const VERT = `#version 300 es
 in vec2 a; void main() { gl_Position = vec4(a, 0.0, 1.0); }`;
 
@@ -138,8 +128,7 @@ function cssColor(name) {
   return [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
 }
 
-// ---------- Simulation ----------
-
+// Simulation
 export function startLavaShapes(canvas) {
   const gl = canvas.getContext("webgl2", { premultipliedAlpha: true, antialias: false });
   if (!gl) return;
@@ -182,7 +171,7 @@ export function startLavaShapes(canvas) {
   let W = 0, H = 0, scale = 1;
   let blobs = [];
 
-  // Like caelestia: sizes spread from small to large, slow drift, gentle turning.
+  // Sizes range from small to large; shapes drift and turn slowly.
   function spawn() {
     const vmin = Math.min(W, H);
     const count = Math.max(14, Math.min(MAX_BLOBS, Math.round((W * H) / 52000)));
@@ -200,7 +189,7 @@ export function startLavaShapes(canvas) {
 
   function resize() {
     const w = innerWidth, h = innerHeight;
-    // Half resolution is plenty for soft, translucent shapes, and keeps 4K screens cheap.
+    // Render below native resolution: the shapes are soft and translucent.
     scale = Math.min(devicePixelRatio || 1, 2) * 0.6;
     canvas.width = Math.round(w * scale);
     canvas.height = Math.round(h * scale);
@@ -211,7 +200,7 @@ export function startLavaShapes(canvas) {
   resize();
   addEventListener("resize", resize);
 
-  // The cursor nudges shapes aside, as in the lava lamp; they drift back to their own course.
+  // The cursor pushes shapes away; they ease back to their own velocity.
   let mouse = null;
   addEventListener("pointermove", (e) => { mouse = [e.clientX, e.clientY]; }, { passive: true });
   document.addEventListener("pointerleave", () => { mouse = null; });
@@ -237,7 +226,7 @@ export function startLavaShapes(canvas) {
       if (b.x < -r) b.x = W + r; else if (b.x > W + r) b.x = -r;
       if (b.y < -r) b.y = H + r; else if (b.y > H + r) b.y = -r;
 
-      // Morph now and then, by blending into another shape's field.
+      // Now and then, morph into another shape.
       if (b.next !== b.shape) {
         b.t += dt / MORPH_SECONDS;
         if (b.t >= 1) { b.shape = b.next; b.t = 0; b.nextMorph = rand(4, 10); }
