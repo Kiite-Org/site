@@ -69,12 +69,6 @@ body {
 .o1 { width: 22%; height: 22%; left: -2%; top: 8%; color: var(--secondary); animation: bob 6s ease-in-out infinite; }
 .o2 { width: 15%; height: 15%; right: 2%; bottom: 6%; color: var(--tertiary); animation: bob 7s ease-in-out -2s infinite; }
 .o3 { width: 11%; height: 11%; right: 8%; top: 4%; color: var(--primary); animation: spin 18s linear infinite; }
-.stage .tag {
-  position: absolute; left: 4%; bottom: 10%; display: flex; align-items: center; gap: 10px;
-  padding: 10px 18px 10px 10px; border-radius: 999px; background: var(--surface-container-highest);
-  font-weight: 600; font-size: 14px; box-shadow: 0 8px 30px #0006;
-}
-.stage .tag m3-shape { width: 32px; height: 32px; color: var(--secondary); }
 @keyframes spin { to { rotate: 360deg; } }
 @keyframes bob { 50% { translate: 0 -14px; rotate: 12deg; } }
 @media (max-width: 900px) {
