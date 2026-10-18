@@ -54,8 +54,8 @@ to `main`, once a day, and whenever KiiteShell's docs change.
 Two deploy keys connect the repos, since KiiteShell is private:
 
 - **KiiteShell → site:** KiiteShell's `site-docs` workflow runs when `docs/` or `README.md`
-  changes on its `main`, and force-pushes a one-commit `docs-sync` branch here (the commit
-  names the KiiteShell commit). A push to `docs-sync` starts the Pages workflow, which still
+  changes on its `main`, and force-pushes a `docs-sync` branch here: `main` plus one marker
+  commit naming the KiiteShell commit. A push to `docs-sync` starts the Pages workflow, which still
   builds this repo's `main`. KiiteShell holds the key in its `SITE_DEPLOY_KEY` secret; the
   key can write to this repo.
 - **Site → KiiteShell:** the Pages workflow reads KiiteShell's docs with a read-only key

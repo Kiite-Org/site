@@ -1,7 +1,7 @@
 # Builds the site from KiiteShell's docs and publishes it to GitHub Pages.
 #
 # Runs on every push to main, and whenever KiiteShell's docs change: KiiteShell's
-# site-docs workflow then force-pushes a one-commit docs-sync branch here, which starts this.
+# site-docs workflow then force-pushes docs-sync here (main plus a marker commit).
 # It also runs once a day, as a fallback, and on demand.
 name: Pages
 
@@ -25,8 +25,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # Always the site's main, even when docs-sync started the run: that branch only
-      # carries a marker.
+      # Always the site's main, even when docs-sync started the run: that branch only adds
+      # a marker.
       - uses: actions/checkout@v4
         with:
           ref: main
