@@ -47,7 +47,8 @@ The shapes are the shell's own (from `gpui-material`):
 
 ### Contributors
 
-The landing page's contributors come from KiiteShell's git history. GitHub no-reply addresses
+The landing page's contributors come from KiiteShell's git history, refreshed on every KiiteShell
+push. GitHub no-reply addresses
 map to accounts on their own; for anyone else, the build warns and shows initials until their
 address is added to `src/contributor-logins.json`:
 
@@ -57,11 +58,11 @@ node -e 'console.log(require("crypto").createHash("sha256").update(process.argv[
 
 ## Deploying
 
-`.github/workflows/pages.yml` deploys to GitHub Pages on pushes to `main`, daily, and when
-KiiteShell's docs change.
+`.github/workflows/pages.yml` deploys to GitHub Pages on pushes to `main`, daily, and on every
+push to KiiteShell's `main`, which keeps the docs and contributors current.
 
 KiiteShell is private, so two deploy keys connect the repos:
 
 - `KIITESHELL_DEPLOY_KEY` (secret here, read-only on KiiteShell): the build reads the docs.
 - `SITE_DEPLOY_KEY` (secret on KiiteShell, write access here): KiiteShell's `site-docs`
-  workflow force-pushes a `docs-sync` branch here when its docs change, which starts a build.
+  workflow force-pushes a `docs-sync` branch here on every push, which starts a build.

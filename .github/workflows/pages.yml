@@ -1,5 +1,5 @@
 # Builds the site and deploys it to GitHub Pages. Runs on pushes to main, on pushes to docs-sync
-# (KiiteShell pushes it when its docs change), daily, and on demand.
+# (KiiteShell pushes it on every push to its main), daily, and on demand.
 name: Pages
 
 on:
