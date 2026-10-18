@@ -49,6 +49,14 @@ Every shape on the site is one of the shapes the shell draws. Use them through:
 ## Deploying
 
 `.github/workflows/pages.yml` builds the site and publishes it to GitHub Pages on every push
-to `main`, once a day, and when KiiteShell sends a `docs-updated` repository dispatch. Because
-KiiteShell is private, the workflow reads it with a deploy key stored in the
-`KIITESHELL_DEPLOY_KEY` secret.
+to `main`, once a day, and whenever KiiteShell's docs change.
+
+Two deploy keys connect the repos, since KiiteShell is private:
+
+- **KiiteShell → site:** KiiteShell's `site-docs` workflow runs when `docs/` or `README.md`
+  changes on its `main`, and force-pushes a one-commit `docs-sync` branch here (the commit
+  names the KiiteShell commit). A push to `docs-sync` starts the Pages workflow, which still
+  builds this repo's `main`. KiiteShell holds the key in its `SITE_DEPLOY_KEY` secret; the
+  key can write to this repo.
+- **Site → KiiteShell:** the Pages workflow reads KiiteShell's docs with a read-only key
+  kept here in the `KIITESHELL_DEPLOY_KEY` secret.

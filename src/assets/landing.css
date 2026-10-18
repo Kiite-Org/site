@@ -11,6 +11,9 @@ body {
 .display { font-weight: 800; font-variation-settings: "wdth" 125, "opsz" 144; letter-spacing: -.035em; line-height: .92; }
 .label { font: 600 13px/1 "Roboto Flex"; letter-spacing: .12em; text-transform: uppercase; color: var(--on-surface-variant); }
 
+/* Pills that change radius on hover use their real half-height, never 999px: the spring
+   easing overshoots, and from 999px it would overshoot past 0 into a sharp corner. */
+
 /* ---------- Top bar: a floating pill, like Kiite's bar ---------- */
 .topbar {
   position: fixed; inset: 12px var(--gutter) auto; z-index: 20;
@@ -23,25 +26,29 @@ body {
 .brand { display: flex; align-items: center; gap: 10px; font-weight: 750; font-variation-settings: "wdth" 120; font-size: 19px; }
 .brand m3-shape { width: 30px; height: 30px; color: var(--primary); }
 .topbar nav { display: flex; gap: 2px; margin-left: auto; }
-.topbar nav a { padding: 10px 16px; border-radius: 999px; font-weight: 550; font-size: 15px; transition: background .2s, border-radius .35s var(--spring); }
+.topbar nav a { padding: 10px 16px; border-radius: 22px; font-weight: 550; font-size: 15px; transition: background .2s, border-radius .35s var(--spring); }
 .topbar nav a:hover { background: var(--surface-container-highest); border-radius: 12px; }
 .btn {
   display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 24px;
-  border-radius: 999px; font: 650 16px/1 "Roboto Flex"; border: 0; cursor: pointer;
+  border-radius: 24px; font: 650 16px/1 "Roboto Flex"; border: 0; cursor: pointer;
   transition: border-radius .4s var(--spring), transform .4s var(--spring), background .2s;
 }
 .btn:hover { border-radius: 14px; }
 .btn:active { transform: scale(.96); border-radius: 10px; }
 .btn.filled { background: var(--primary); color: var(--on-primary); }
 .btn.tonal { background: var(--secondary-container); color: var(--on-secondary-container); }
-.btn.small { height: 40px; padding: 0 18px; font-size: 14px; }
+.btn.small { height: 40px; padding: 0 18px; font-size: 14px; border-radius: 20px; }
+.btn.small:hover { border-radius: 12px; }
 @media (max-width: 760px) { .topbar nav { display: none; } .topbar .btn { margin-left: auto; } }
 
 /* ---------- Hero ---------- */
 .hero { padding: 120px 0 40px; position: relative; }
 .hero-grid { display: grid; grid-template-columns: 1.1fr 1fr; align-items: center; gap: 24px; }
 .hero-grid > * { min-width: 0; }
-.hero h1 { font-size: clamp(42px, 9.5vw, 148px); overflow-wrap: anywhere; }
+/* Sized to the text column, not the window, so the longest word ("desktop,") always fits on
+   its line instead of breaking in the middle. */
+.hero-grid > :first-child { container-type: inline-size; }
+.hero h1 { font-size: min(15.5cqi, 148px); }
 .hero h1 .accent { color: var(--primary); }
 .hero h1 .pink { color: var(--secondary); font-variation-settings: "wdth" 70, "opsz" 144; font-weight: 900; font-style: italic; }
 .hero p.lede { font-size: clamp(18px, 1.6vw, 22px); color: var(--on-surface-variant); max-width: 34ch; margin: 28px 0 32px; }
@@ -157,7 +164,7 @@ pre .c { color: var(--outline); } pre .k { color: var(--primary); }
 /* ---------- Docs teaser ---------- */
 .docs { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
 .doc {
-  display: flex; align-items: center; gap: 16px; padding: 14px 20px 14px 14px; border-radius: 999px;
+  display: flex; align-items: center; gap: 16px; padding: 14px 20px 14px 14px; border-radius: 40px;
   background: var(--surface-container); transition: background .2s, border-radius .45s var(--spring);
 }
 .doc:hover { background: var(--surface-container-highest); border-radius: 24px; }

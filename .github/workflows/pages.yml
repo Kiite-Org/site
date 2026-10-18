@@ -1,17 +1,16 @@
 # Builds the site from KiiteShell's docs and publishes it to GitHub Pages.
-# Runs on every push, daily (to pick up doc changes in KiiteShell), and on demand.
-# KiiteShell can also trigger it right after a docs change with a repository_dispatch
-# event of type "docs-updated".
+#
+# Runs on every push to main, and whenever KiiteShell's docs change: KiiteShell's
+# site-docs workflow then force-pushes a one-commit docs-sync branch here, which starts this.
+# It also runs once a day, as a fallback, and on demand.
 name: Pages
 
 on:
   push:
-    branches: [main]
+    branches: [main, docs-sync]
   schedule:
     - cron: "17 4 * * *"
   workflow_dispatch:
-  repository_dispatch:
-    types: [docs-updated]
 
 permissions:
   contents: read
@@ -26,7 +25,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # Always the site's main, even when docs-sync started the run: that branch only
+      # carries a marker.
       - uses: actions/checkout@v4
+        with:
+          ref: main
 
       # KiiteShell is private, so this needs a read-only deploy key on that repo, with the
       # private half saved here as the KIITESHELL_DEPLOY_KEY secret.

@@ -403,6 +403,11 @@ ${html}
   });
 }
 
+// A docs home card rests in one shape and morphs into its group's shape on hover. When the
+// two would be the same, it morphs into a burst instead, so every card visibly changes.
+const cardShape = (g, i) => H2_SHAPES[(i + g.group.length) % H2_SHAPES.length];
+const cardHover = (g, i) => (cardShape(g, i) === g.shape ? "SoftBurst" : g.shape);
+
 function docsHome() {
   const root = "../";
   const content = `        ${hero({ eyebrowIcon: "menu_book", eyebrow: "Documentation", title: "Kiite Docs", cls: "home-hero",
@@ -413,7 +418,7 @@ function docsHome() {
             <h2><m3-shape shape="${g.shape}"></m3-shape>${esc(g.group)}</h2>
             <div class="cards">
               ${PAGES.filter((p) => p.group === g).map((p, i) => `<a class="doc-card" href="${p.slug}/" data-hover-root>
-                <span class="shaped"><m3-shape shape="${H2_SHAPES[(i + g.group.length) % H2_SHAPES.length]}" hover="${g.shape}" style="color:var(--secondary-container)"></m3-shape><span class="sym" style="color:var(--on-secondary-container)">${p.icon}</span></span>
+                <span class="shaped"><m3-shape shape="${cardShape(g, i)}" hover="${cardHover(g, i)}" style="color:var(--secondary-container)"></m3-shape><span class="sym" style="color:var(--on-secondary-container)">${p.icon}</span></span>
                 <b>${esc(p.title)}</b><p>${esc(p.blurb)}</p></a>`).join("\n              ")}
             </div>
           </section>`).join("\n          ")}
