@@ -1,0 +1,176 @@
+/* The landing page. Always dark: the page sets data-theme="dark". */
+:root { --gutter: clamp(16px, 4vw, 48px); }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--surface); color: var(--on-surface);
+  font: 400 17px/1.55 "Roboto Flex", system-ui, sans-serif;
+}
+.wrap { max-width: 1280px; margin: 0 auto; padding: 0 var(--gutter); }
+
+/* Display type leans on Roboto Flex's width and weight axes. */
+.display { font-weight: 800; font-variation-settings: "wdth" 125, "opsz" 144; letter-spacing: -.035em; line-height: .92; }
+.label { font: 600 13px/1 "Roboto Flex"; letter-spacing: .12em; text-transform: uppercase; color: var(--on-surface-variant); }
+
+/* ---------- Top bar: a floating pill, like Kiite's bar ---------- */
+.topbar {
+  position: fixed; inset: 12px var(--gutter) auto; z-index: 20;
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 8px 8px 12px; border-radius: 999px;
+  background: color-mix(in srgb, var(--surface-container) 82%, transparent);
+  backdrop-filter: blur(18px);
+  max-width: 1184px; margin: 0 auto;
+}
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 750; font-variation-settings: "wdth" 120; font-size: 19px; }
+.brand m3-shape { width: 30px; height: 30px; color: var(--primary); }
+.topbar nav { display: flex; gap: 2px; margin-left: auto; }
+.topbar nav a { padding: 10px 16px; border-radius: 999px; font-weight: 550; font-size: 15px; transition: background .2s, border-radius .35s var(--spring); }
+.topbar nav a:hover { background: var(--surface-container-highest); border-radius: 12px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 24px;
+  border-radius: 999px; font: 650 16px/1 "Roboto Flex"; border: 0; cursor: pointer;
+  transition: border-radius .4s var(--spring), transform .4s var(--spring), background .2s;
+}
+.btn:hover { border-radius: 14px; }
+.btn:active { transform: scale(.96); border-radius: 10px; }
+.btn.filled { background: var(--primary); color: var(--on-primary); }
+.btn.tonal { background: var(--secondary-container); color: var(--on-secondary-container); }
+.btn.small { height: 40px; padding: 0 18px; font-size: 14px; }
+@media (max-width: 760px) { .topbar nav { display: none; } .topbar .btn { margin-left: auto; } }
+
+/* ---------- Hero ---------- */
+.hero { padding: 120px 0 40px; position: relative; }
+.hero-grid { display: grid; grid-template-columns: 1.1fr 1fr; align-items: center; gap: 24px; }
+.hero-grid > * { min-width: 0; }
+.hero h1 { font-size: clamp(42px, 9.5vw, 148px); overflow-wrap: anywhere; }
+.hero h1 .accent { color: var(--primary); }
+.hero h1 .pink { color: var(--secondary); font-variation-settings: "wdth" 70, "opsz" 144; font-weight: 900; font-style: italic; }
+.hero p.lede { font-size: clamp(18px, 1.6vw, 22px); color: var(--on-surface-variant); max-width: 34ch; margin: 28px 0 32px; }
+.hero .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+.chip-code {
+  display: inline-flex; align-items: center; gap: 12px; margin-top: 28px;
+  padding: 10px 10px 10px 20px; border-radius: 20px; background: var(--surface-container-high);
+  font: 500 14px "Roboto Mono", monospace; color: var(--on-surface-variant); max-width: 100%; overflow: hidden;
+}
+.chip-code span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chip-code button { flex: none; width: 36px; height: 36px; border-radius: 12px; border: 0; background: var(--surface-container-highest); color: var(--on-surface); cursor: pointer; display: grid; place-items: center; transition: border-radius .35s var(--spring); }
+.chip-code button:hover { border-radius: 50%; }
+
+.stage { position: relative; aspect-ratio: 1; width: 100%; max-width: 620px; justify-self: end; }
+.stage .art { position: absolute; inset: 6%; background: url(wallpaper.jpg) 38% 40% / cover; }
+.stage .halo { position: absolute; inset: 0; color: var(--primary-container); animation: spin 60s linear infinite; }
+.stage .orbit { position: absolute; }
+.o1 { width: 22%; height: 22%; left: -2%; top: 8%; color: var(--secondary); animation: bob 6s ease-in-out infinite; }
+.o2 { width: 15%; height: 15%; right: 2%; bottom: 6%; color: var(--tertiary); animation: bob 7s ease-in-out -2s infinite; }
+.o3 { width: 11%; height: 11%; right: 8%; top: 4%; color: var(--primary); animation: spin 18s linear infinite; }
+.stage .tag {
+  position: absolute; left: 4%; bottom: 10%; display: flex; align-items: center; gap: 10px;
+  padding: 10px 18px 10px 10px; border-radius: 999px; background: var(--surface-container-highest);
+  font-weight: 600; font-size: 14px; box-shadow: 0 8px 30px #0006;
+}
+.stage .tag m3-shape { width: 32px; height: 32px; color: var(--secondary); }
+@keyframes spin { to { rotate: 360deg; } }
+@keyframes bob { 50% { translate: 0 -14px; rotate: 12deg; } }
+@media (max-width: 900px) {
+  .hero-grid { grid-template-columns: minmax(0, 1fr); }
+  .stage { justify-self: center; max-width: 440px; order: -1; }
+}
+
+/* ---------- Shape ribbon ---------- */
+.ribbon { padding: 56px 0; overflow: hidden; }
+.ribbon-track { display: flex; gap: 28px; width: max-content; animation: slide 70s linear infinite; }
+.ribbon m3-shape { width: 84px; height: 84px; flex: none; transition: transform .5s var(--spring); }
+.ribbon m3-shape:hover { transform: scale(1.25) rotate(20deg); }
+.ribbon:hover .ribbon-track { animation-play-state: paused; }
+@keyframes slide { to { translate: -50% 0; } }
+
+/* ---------- Section heads ---------- */
+section { padding: 72px 0; }
+.head { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 40px; flex-wrap: wrap; }
+.head h2 { font-size: clamp(40px, 6vw, 88px); max-width: 14ch; }
+.head p { color: var(--on-surface-variant); max-width: 38ch; }
+
+/* ---------- Bento ---------- */
+.bento { display: grid; grid-template-columns: repeat(12, 1fr); gap: 12px; }
+.card {
+  position: relative; overflow: hidden; border-radius: 32px; padding: 28px;
+  background: var(--surface-container); min-height: 260px;
+  display: flex; flex-direction: column; justify-content: flex-end; gap: 8px;
+  transition: border-radius .5s var(--spring), background .3s;
+}
+.card:hover { border-radius: 56px; }
+.card h3 { font-size: 28px; font-weight: 750; font-variation-settings: "wdth" 115; letter-spacing: -.01em; }
+.card p { color: var(--on-surface-variant); font-size: 15.5px; max-width: 42ch; }
+.card .glyph { position: absolute; top: 24px; right: 24px; width: 104px; height: 104px; display: grid; place-items: center; }
+.card .glyph m3-shape { position: absolute; inset: 0; }
+.card .glyph .sym { position: relative; font-size: 40px; }
+.card.primary { background: var(--primary-container); color: var(--on-primary-container); }
+.card.primary p { color: color-mix(in srgb, var(--on-primary-container) 80%, transparent); }
+.card.secondary { background: var(--secondary-container); color: var(--on-secondary-container); }
+.card.secondary p { color: color-mix(in srgb, var(--on-secondary-container) 80%, transparent); }
+.card.tertiary { background: var(--tertiary-container); color: var(--on-tertiary-container); }
+.card.tertiary p { color: color-mix(in srgb, var(--on-tertiary-container) 80%, transparent); }
+.span-7 { grid-column: span 7; } .span-5 { grid-column: span 5; } .span-4 { grid-column: span 4; }
+.span-8 { grid-column: span 8; } .span-6 { grid-column: span 6; } .tall { min-height: 360px; }
+@media (max-width: 900px) { .bento > * { grid-column: span 12; } }
+
+/* Big launcher card shows the prefixes as shaped keys */
+.prefixes { display: flex; flex-wrap: wrap; gap: 10px; margin: 8px 0 14px; }
+.key { position: relative; width: 58px; height: 58px; display: grid; place-items: center; font: 600 22px "Roboto Mono"; color: var(--on-primary); }
+.key m3-shape { position: absolute; inset: 0; color: var(--primary); }
+.key b { position: relative; }
+
+/* ---------- Media shape showcase ---------- */
+.media { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.media-art { position: relative; border-radius: 48px; background: var(--surface-container-low); aspect-ratio: 1; display: grid; place-items: center; overflow: hidden; }
+.media-art .viz { position: absolute; inset: 0; width: 100%; height: 100%; }
+.media-art .cover { position: absolute; inset: 18%; background: linear-gradient(135deg, var(--secondary), var(--tertiary) 55%, var(--primary)); }
+.media-art .cover::after { content: ""; position: absolute; inset: 0; background: url(wallpaper.jpg) 60% 30% / 260%; mix-blend-mode: luminosity; opacity: .55; }
+.media-copy { border-radius: 48px; background: var(--surface-container); padding: clamp(28px, 4vw, 48px); display: flex; flex-direction: column; justify-content: space-between; gap: 32px; }
+.media-copy h2 { font-size: clamp(40px, 5vw, 72px); }
+.shape-picker { display: grid; grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); gap: 8px; }
+.shape-picker button { aspect-ratio: 1; border: 0; padding: 10px; border-radius: 16px; background: var(--surface-container-high); color: var(--on-surface-variant); cursor: pointer; transition: background .2s, border-radius .4s var(--spring); }
+.shape-picker button:hover { border-radius: 50%; }
+.shape-picker button[aria-pressed="true"] { background: var(--secondary); color: var(--on-secondary); }
+.shape-picker m3-shape { width: 100%; height: 100%; }
+.player { display: flex; align-items: center; gap: 14px; }
+.player .play { width: 64px; height: 64px; flex: none; position: relative; border: 0; background: none; cursor: pointer; color: var(--on-primary); display: grid; place-items: center; }
+.player .play m3-shape { position: absolute; inset: 0; color: var(--primary); }
+.player .play .sym { position: relative; font-size: 32px; }
+.wave { flex: 1; height: 6px; border-radius: 3px; background: linear-gradient(90deg, var(--primary) 38%, var(--outline-variant) 38%); }
+@media (max-width: 900px) { .media { grid-template-columns: 1fr; } }
+
+/* ---------- Install ---------- */
+.install { border-radius: 56px; background: var(--surface-container-low); padding: clamp(28px, 5vw, 64px); }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 40px; }
+.step { background: var(--surface-container-high); border-radius: 32px; padding: 24px; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.step .num { width: 72px; height: 72px; position: relative; display: grid; place-items: center; font-weight: 850; font-size: 30px; font-variation-settings: "wdth" 130; }
+.step .num m3-shape { position: absolute; inset: 0; }
+.step:nth-child(1) .num { color: var(--on-primary); } .step:nth-child(1) .num m3-shape { color: var(--primary); }
+.step:nth-child(2) .num { color: var(--on-secondary); } .step:nth-child(2) .num m3-shape { color: var(--secondary); }
+.step:nth-child(3) .num { color: var(--on-tertiary); } .step:nth-child(3) .num m3-shape { color: var(--tertiary); }
+.step .num b { position: relative; }
+.step h3 { font-size: 22px; font-weight: 700; }
+pre { background: var(--surface-container-lowest); border-radius: 20px; padding: 16px 18px; font: 14px/1.6 "Roboto Mono", monospace; color: var(--on-surface-variant); overflow-x: auto; }
+pre .c { color: var(--outline); } pre .k { color: var(--primary); }
+@media (max-width: 900px) { .steps { grid-template-columns: 1fr; } }
+
+/* ---------- Docs teaser ---------- */
+.docs { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+.doc {
+  display: flex; align-items: center; gap: 16px; padding: 14px 20px 14px 14px; border-radius: 999px;
+  background: var(--surface-container); transition: background .2s, border-radius .45s var(--spring);
+}
+.doc:hover { background: var(--surface-container-highest); border-radius: 24px; }
+.doc .ic { width: 52px; height: 52px; flex: none; position: relative; display: grid; place-items: center; color: var(--on-tertiary-container); }
+.doc .ic m3-shape { position: absolute; inset: 0; color: var(--tertiary-container); }
+.doc .ic .sym { position: relative; }
+.doc b { display: block; font-weight: 650; }
+.doc small { color: var(--on-surface-variant); font-size: 13.5px; }
+
+/* ---------- Footer ---------- */
+footer { padding: 80px 0 40px; overflow: hidden; }
+.giant { font-size: clamp(96px, 27vw, 400px); line-height: .8; display: flex; align-items: center; gap: .04em; color: var(--surface-container-high); user-select: none; }
+.giant m3-shape { width: .7em; height: .7em; color: var(--primary); flex: none; }
+.foot { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 32px; color: var(--on-surface-variant); font-size: 14px; }
+.foot a:hover { color: var(--on-surface); }
+

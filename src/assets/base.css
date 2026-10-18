@@ -1,0 +1,60 @@
+/* Shared by the landing page and the docs.
+   Colors: SchemeExpressive from seed #9ccbfb (the README's badge blue), light and dark. */
+:root {
+  --primary: #4c6621; --on-primary: #ffffff; --primary-container: #ceee98; --on-primary-container: #364e09;
+  --secondary: #77536d; --on-secondary: #ffffff; --secondary-container: #ffd7f1; --on-secondary-container: #5d3c54;
+  --tertiary: #475e8a; --on-tertiary: #ffffff; --tertiary-container: #d7e2ff; --on-tertiary-container: #2e4771;
+  --surface: #f9f9ff; --on-surface: #181c22; --on-surface-variant: #414753;
+  --surface-container-lowest: #ffffff; --surface-container-low: #f2f3fd; --surface-container: #ecedf7;
+  --surface-container-high: #e6e8f1; --surface-container-highest: #e0e2ec;
+  --outline: #727785; --outline-variant: #c1c6d6;
+  --spring: cubic-bezier(.34, 1.56, .64, 1);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --primary: #b2d17f; --on-primary: #223600; --primary-container: #364e09; --on-primary-container: #ceee98;
+    --secondary: #e6bad7; --on-secondary: #44263d; --secondary-container: #5d3c54; --on-secondary-container: #ffd7f1;
+    --tertiary: #afc7f8; --on-tertiary: #163059; --tertiary-container: #2e4771; --on-tertiary-container: #d7e2ff;
+    --surface: #10131a; --on-surface: #e0e2ec; --on-surface-variant: #c1c6d6;
+    --surface-container-lowest: #0b0e15; --surface-container-low: #181c22; --surface-container: #1d2027;
+    --surface-container-high: #272a31; --surface-container-highest: #32353c;
+    --outline: #8b919f; --outline-variant: #414753;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --primary: #b2d17f; --on-primary: #223600; --primary-container: #364e09; --on-primary-container: #ceee98;
+  --secondary: #e6bad7; --on-secondary: #44263d; --secondary-container: #5d3c54; --on-secondary-container: #ffd7f1;
+  --tertiary: #afc7f8; --on-tertiary: #163059; --tertiary-container: #2e4771; --on-tertiary-container: #d7e2ff;
+  --surface: #10131a; --on-surface: #e0e2ec; --on-surface-variant: #c1c6d6;
+  --surface-container-lowest: #0b0e15; --surface-container-low: #181c22; --surface-container: #1d2027;
+  --surface-container-high: #272a31; --surface-container-highest: #32353c;
+  --outline: #8b919f; --outline-variant: #414753;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; margin: 0; }
+html { overflow-x: clip; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; }
+.sym {
+  font-family: "Material Symbols Rounded"; font-weight: normal; font-style: normal; line-height: 1;
+  font-size: 24px; display: inline-block; font-feature-settings: "liga"; -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+m3-shape { display: block; }
+m3-shape svg { display: block; width: 100%; height: 100%; overflow: visible; }
+
+/* A shape behind an icon or a character: <span class="shaped"><m3-shape …></m3-shape><span class="sym">…</span></span> */
+.shaped { position: relative; display: grid; place-items: center; flex: none; }
+.shaped > m3-shape { position: absolute; inset: 0; }
+.shaped > :not(m3-shape) { position: relative; }
+
+.skip { position: absolute; left: 16px; top: -60px; z-index: 100; padding: 10px 16px; border-radius: 12px; background: var(--primary); color: var(--on-primary); font-weight: 650; }
+.skip:focus { top: 12px; }
+:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; border-radius: 12px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

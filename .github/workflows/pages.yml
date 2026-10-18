@@ -1,0 +1,72 @@
+# Builds the site from KiiteShell's docs and publishes it to GitHub Pages.
+# Runs on every push, daily (to pick up doc changes in KiiteShell), and on demand.
+# KiiteShell can also trigger it right after a docs change with a repository_dispatch
+# event of type "docs-updated".
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 4 * * *"
+  workflow_dispatch:
+  repository_dispatch:
+    types: [docs-updated]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # KiiteShell is private, so this needs a read-only deploy key on that repo, with the
+      # private half saved here as the KIITESHELL_DEPLOY_KEY secret.
+      - name: Check out KiiteShell for its docs
+        uses: actions/checkout@v4
+        with:
+          repository: Kiite-Org/KiiteShell
+          ssh-key: ${{ secrets.KIITESHELL_DEPLOY_KEY }}
+          path: KiiteShell
+          sparse-checkout: |
+            README.md
+            docs
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Build
+        run: npm run build
+        env:
+          KIITE_DIR: KiiteShell
+          SITE_BASE: ${{ steps.pages.outputs.base_path }}/
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
