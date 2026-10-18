@@ -1,5 +1,6 @@
 // The landing page: hero morph, shape ribbon, the media-shape demo and copy buttons.
 import { SHAPES, SHAPE_NAMES, wireClips, morphableClip, morphPath } from "./shapes.js";
+import { startLavaShapes } from "./lava-shapes.js";
 
 wireClips();
 
@@ -91,3 +92,8 @@ document.getElementById("tour-play").addEventListener("click", () => {
   tourVideo.controls = true;
   tourVideo.play().catch(() => {});
 });
+
+// Background shapes: their distance fields take a moment to compute, so start after first paint.
+const lava = document.getElementById("lava");
+const startLava = () => { try { startLavaShapes(lava); } catch (e) { console.warn("Background shapes unavailable:", e); } };
+"requestIdleCallback" in window ? requestIdleCallback(startLava, { timeout: 800 }) : setTimeout(startLava, 200);

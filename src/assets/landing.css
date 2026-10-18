@@ -5,6 +5,10 @@ body {
   background: var(--surface); color: var(--on-surface);
   font: 400 17px/1.55 "Roboto Flex", system-ui, sans-serif;
 }
+/* Floating shapes behind everything (lava-shapes.js). */
+.lava { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; opacity: 0; transition: opacity 1.2s ease; }
+.lava.ready { opacity: 1; }
+
 .wrap { max-width: 1280px; margin: 0 auto; padding: 0 var(--gutter); }
 
 /* Display type leans on Roboto Flex's width and weight axes. */
