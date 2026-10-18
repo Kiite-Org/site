@@ -1,5 +1,4 @@
-// M3 Expressive shapes for the site: clip paths, a <m3-shape> element, and spring morphs.
-// The outlines come from gpui-material, so the site and the shell draw the same shapes.
+// M3 shapes (outlines from gpui-material): clip paths, the <m3-shape> element, and spring morphs.
 import { SHAPES } from "./shape-paths.js";
 
 export { SHAPES };
@@ -75,7 +74,7 @@ function pointsToPath(pts) {
   return d + "Z";
 }
 
-// The M3 Expressive spatial spring: under-damped, so morphs overshoot a little and settle.
+// Under-damped spring (M3 Expressive spatial motion): overshoots a little, then settles.
 export function spring(t, damping = 0.6, stiffness = 380) {
   const w0 = Math.sqrt(stiffness);
   const zeta = damping;

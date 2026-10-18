@@ -1,5 +1,4 @@
-/* Shared by the landing page and the docs.
-   Colors: SchemeExpressive from seed #9ccbfb (the README's badge blue), light and dark. */
+/* Shared by the landing page and the docs. Colors: M3 SchemeExpressive from seed #9ccbfb. */
 :root {
   --primary: #4c6621; --on-primary: #ffffff; --primary-container: #ceee98; --on-primary-container: #364e09;
   --secondary: #77536d; --on-secondary: #ffffff; --secondary-container: #ffd7f1; --on-secondary-container: #5d3c54;
@@ -46,7 +45,7 @@ button { font: inherit; color: inherit; }
 m3-shape { display: block; }
 m3-shape svg { display: block; width: 100%; height: 100%; overflow: visible; }
 
-/* A shape behind an icon or a character: <span class="shaped"><m3-shape …></m3-shape><span class="sym">…</span></span> */
+/* An icon or character on top of a shape: .shaped > m3-shape + content */
 .shaped { position: relative; display: grid; place-items: center; flex: none; }
 .shaped > m3-shape { position: absolute; inset: 0; }
 .shaped > :not(m3-shape) { position: relative; }

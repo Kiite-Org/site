@@ -11,7 +11,7 @@ body {
 
 .wrap { max-width: 1280px; margin: 0 auto; padding: 0 var(--gutter); }
 
-/* Display type leans on Roboto Flex's width and weight axes. */
+/* Display type: Roboto Flex, wide and heavy. */
 .display { font-weight: 800; font-variation-settings: "wdth" 125, "opsz" 144; letter-spacing: -.035em; line-height: .92; }
 .label { font: 600 13px/1 "Roboto Flex"; letter-spacing: .12em; text-transform: uppercase; color: var(--on-surface-variant); }
 
@@ -130,7 +130,7 @@ section { padding: 72px 0; }
 .span-8 { grid-column: span 8; } .span-6 { grid-column: span 6; } .tall { min-height: 360px; }
 @media (max-width: 900px) { .bento > * { grid-column: span 12; } }
 
-/* Big launcher card shows the prefixes as shaped keys */
+/* Launcher prefixes as shaped keys */
 .prefixes { display: flex; flex-wrap: wrap; gap: 10px; margin: 8px 0 14px; }
 .key { position: relative; width: 58px; height: 58px; display: grid; place-items: center; font: 600 22px "Roboto Mono"; color: var(--on-primary); }
 .key m3-shape { position: absolute; inset: 0; color: var(--primary); }
