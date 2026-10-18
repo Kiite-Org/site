@@ -6,6 +6,7 @@
 // The docs are read from a KiiteShell checkout (../KiiteShell by default), so the site
 // always shows what the shell's repo says.
 
+import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -472,6 +473,41 @@ function write(rel, content) {
   fs.writeFileSync(file, content);
 }
 
+// Cache busting. Pages lets browsers keep files for ten minutes, which after a deploy left
+// visitors with new HTML on old CSS and JS. Every reference to a file in assets/ gets
+// ?v=<hash of its contents>, so a changed file is a new URL. Scripts and stylesheets are
+// rewritten before they're hashed, so a change to shape-paths.js also changes the URLs of
+// shapes.js and of the scripts that import it.
+const ASSET_REF = {
+  ".js": /(\bfrom\s*["'])(\.\/[^"'?#]+)(["'])/g,
+  ".css": /(url\(\s*["']?)(?!data:|#)([^"')?#]+)(["']?\s*\))/g,
+  ".html": /(\b(?:href|src|poster)=")([^"?#:]*assets\/[^"?#]+)(")/g,
+};
+function fingerprint() {
+  const hashes = new Map();
+  const hashOf = (file) => {
+    if (!hashes.has(file)) {
+      const ext = path.extname(file);
+      if (ext === ".js" || ext === ".css") rewriteRefs(file);
+      hashes.set(file, crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex").slice(0, 10));
+    }
+    return hashes.get(file);
+  };
+  const rewriteRefs = (file) => {
+    const re = ASSET_REF[path.extname(file)];
+    const src = fs.readFileSync(file, "utf8");
+    const out = src.replace(re, (all, pre, ref, post) => {
+      // The 404 page links from the site's base path, since it's served at any URL.
+      const target = ref.startsWith("/") ? path.join(OUT, ref.slice(BASE.length)) : path.resolve(path.dirname(file), ref);
+      return fs.existsSync(target) ? `${pre}${ref}?v=${hashOf(target)}${post}` : all;
+    });
+    if (out !== src) fs.writeFileSync(file, out);
+  };
+  const walk = (dir) => fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) =>
+    e.isDirectory() ? walk(path.join(dir, e.name)) : [path.join(dir, e.name)]);
+  for (const file of walk(OUT).filter((f) => f.endsWith(".html"))) rewriteRefs(file);
+}
+
 export function build() {
   const started = Date.now();
   if (!fs.existsSync(path.join(KIITE_DIR, "docs"))) {
@@ -493,6 +529,7 @@ export function build() {
     page: p.title, heading: s.heading, url: `docs/${p.slug}/${s.id ? `#${s.id}` : ""}`, text: s.text.slice(0, 1200),
   })));
   write("search.json", JSON.stringify(index));
+  fingerprint();
 
   console.log(`Built ${PAGES.length} docs pages from ${KIITE_DIR} in ${Date.now() - started} ms`);
 }

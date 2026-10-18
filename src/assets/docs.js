@@ -74,7 +74,7 @@ document.addEventListener("keydown", (e) => {
 });
 
 async function loadIndex() {
-  if (!index) index = fetch(siteRoot + "search.json").then((r) => r.json()).catch(() => []);
+  if (!index) index = fetch(siteRoot + "search.json", { cache: "no-cache" }).then((r) => r.json()).catch(() => []);
   return index;
 }
 input.addEventListener("focus", loadIndex, { once: true });
