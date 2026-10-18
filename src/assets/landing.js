@@ -82,3 +82,12 @@ let tick = 0;
 for (const b of document.querySelectorAll("[data-copy]")) b.onclick = async () => {
   try { await navigator.clipboard.writeText(b.dataset.copy); b.querySelector(".sym").textContent = "check"; setTimeout(() => (b.querySelector(".sym").textContent = "content_copy"), 1400); } catch {}
 };
+
+// Tour video: loads only on play, then hands over to the browser's own controls.
+const tourFrame = document.getElementById("tour-frame");
+const tourVideo = document.getElementById("tour-video");
+document.getElementById("tour-play").addEventListener("click", () => {
+  tourFrame.classList.add("playing");
+  tourVideo.controls = true;
+  tourVideo.play().catch(() => {});
+});

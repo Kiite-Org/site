@@ -19,6 +19,7 @@
 <header class="topbar">
   <a class="brand" href="#"><m3-shape shape="Cookie9Sided" hover="Flower" data-hover-root></m3-shape>Kiite</a>
   <nav>
+    <a href="#tour">Tour</a>
     <a href="#features">Features</a>
     <a href="#media">Shapes</a>
     <a href="#install">Install</a>
@@ -51,6 +52,22 @@
 </section>
 
 <div class="ribbon" aria-hidden="true"><div class="ribbon-track" id="ribbon"></div></div>
+
+<section id="tour">
+  <div class="wrap">
+    <div class="head">
+      <h2 class="display">See it move.</h2>
+      <p>A two-minute tour: the desktop and its widgets, the wallpaper carousel, Kiite Drop, screenshot markup and edit mode.</p>
+    </div>
+    <div class="tour" id="tour-frame">
+      <video id="tour-video" src="assets/showcase.mp4" poster="assets/showcase-poster.jpg" preload="none" playsinline aria-label="KiiteShell showcase"></video>
+      <button class="tour-play" id="tour-play" aria-label="Play the tour" data-hover-root>
+        <span class="shaped"><m3-shape shape="Cookie9Sided" hover="Flower"></m3-shape><span class="sym">play_arrow</span></span>
+        <span class="tour-len"><span class="sym">schedule</span>2:16</span>
+      </button>
+    </div>
+  </div>
+</section>
 
 <section id="features">
   <div class="wrap">
@@ -163,7 +180,7 @@ exec-once = <span class="k">kiite</span></pre></div>
 
 <footer>
   <div class="wrap">
-    <div class="giant display" aria-hidden="true">ki<m3-shape shape="Cookie12Sided" morph="Flower,Burst,Clover8Leaf,Heart" interval="2400"></m3-shape>te</div>
+    <div class="giant display" aria-hidden="true">ki<span class="tittle">ı<m3-shape shape="Cookie12Sided" morph="Flower,Burst,Clover8Leaf,Heart" interval="2400"></m3-shape></span>te</div>
     <div class="foot"><span>MIT licensed. Built on GPUI, inspired by Illogical Impulse.</span><span><a href="https://github.com/Kiite-Org/KiiteShell">GitHub</a> · <a href="docs/">Docs</a></span></div>
   </div>
 </footer>
