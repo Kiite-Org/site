@@ -1,4 +1,4 @@
-// The landing page: hero morph, shape ribbon, the media-shape demo and copy buttons.
+// The landing page: hero morph, shape ribbon, the media-shape demo, tour video and contributors.
 import { SHAPES, SHAPE_NAMES, wireClips, morphableClip, morphPath } from "./shapes.js";
 import { startLavaShapes } from "./lava-shapes.js";
 import { startConstellation } from "./constellation.js";
@@ -81,9 +81,6 @@ let tick = 0;
   requestAnimationFrame(frame);
 })();
 
-for (const b of document.querySelectorAll("[data-copy]")) b.onclick = async () => {
-  try { await navigator.clipboard.writeText(b.dataset.copy); b.querySelector(".sym").textContent = "check"; setTimeout(() => (b.querySelector(".sym").textContent = "content_copy"), 1400); } catch {}
-};
 
 // Tour video: loads only on play, then hands over to the browser's own controls.
 const tourFrame = document.getElementById("tour-frame");

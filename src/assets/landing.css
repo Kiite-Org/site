@@ -60,14 +60,9 @@ body {
 .hero h1 .pink { color: var(--secondary); font-variation-settings: "wdth" 70, "opsz" 144; font-weight: 900; font-style: italic; }
 .hero p.lede { font-size: clamp(18px, 1.6vw, 22px); color: var(--on-surface-variant); max-width: 34ch; margin: 28px 0 32px; }
 .hero .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
-.chip-code {
-  display: inline-flex; align-items: center; gap: 12px; margin-top: 28px;
-  padding: 10px 10px 10px 20px; border-radius: 20px; background: var(--surface-container-high);
-  font: 500 14px "Roboto Mono", monospace; color: var(--on-surface-variant); max-width: 100%; overflow: hidden;
-}
-.chip-code span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.chip-code button { flex: none; width: 36px; height: 36px; border-radius: 12px; border: 0; background: var(--surface-container-highest); color: var(--on-surface); cursor: pointer; display: grid; place-items: center; transition: border-radius .35s var(--spring); }
-.chip-code button:hover { border-radius: 50%; }
+.status { display: inline-flex; align-items: center; gap: 10px; margin-top: 16px; padding: 8px 16px 8px 12px; border-radius: 18px; background: var(--tertiary-container); color: var(--on-tertiary-container); font-weight: 600; font-size: 14px; }
+.status .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--tertiary); animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .35; } }
 
 .stage { position: relative; aspect-ratio: 1; width: 100%; max-width: 620px; justify-self: end; }
 .stage .art { position: absolute; inset: 6%; background: url(wallpaper.jpg) 38% 40% / cover; }
@@ -165,20 +160,12 @@ section { padding: 72px 0; }
 .wave { flex: 1; height: 6px; border-radius: 3px; background: linear-gradient(90deg, var(--primary) 38%, var(--outline-variant) 38%); }
 @media (max-width: 900px) { .media { grid-template-columns: 1fr; } }
 
-/* Install */
-.install { border-radius: 56px; background: var(--surface-container-low); padding: clamp(28px, 5vw, 64px); }
-.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 40px; }
-.step { background: var(--surface-container-high); border-radius: 32px; padding: 24px; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
-.step .num { width: 72px; height: 72px; position: relative; display: grid; place-items: center; font-weight: 850; font-size: 30px; font-variation-settings: "wdth" 130; }
-.step .num m3-shape { position: absolute; inset: 0; }
-.step:nth-child(1) .num { color: var(--on-primary); } .step:nth-child(1) .num m3-shape { color: var(--primary); }
-.step:nth-child(2) .num { color: var(--on-secondary); } .step:nth-child(2) .num m3-shape { color: var(--secondary); }
-.step:nth-child(3) .num { color: var(--on-tertiary); } .step:nth-child(3) .num m3-shape { color: var(--tertiary); }
-.step .num b { position: relative; }
-.step h3 { font-size: 22px; font-weight: 700; }
-pre { background: var(--surface-container-lowest); border-radius: 20px; padding: 16px 18px; font: 14px/1.6 "Roboto Mono", monospace; color: var(--on-surface-variant); overflow-x: auto; }
-pre .c { color: var(--outline); } pre .k { color: var(--primary); }
-@media (max-width: 900px) { .steps { grid-template-columns: 1fr; } }
+/* Not released yet */
+.soon { display: flex; align-items: center; gap: clamp(24px, 5vw, 56px); border-radius: 56px; background: var(--surface-container-low); padding: clamp(28px, 5vw, 64px); }
+.soon-shape { width: clamp(96px, 16vw, 180px); height: clamp(96px, 16vw, 180px); flex: none; color: var(--tertiary-container); }
+.soon h2 { font-size: clamp(40px, 6vw, 88px); }
+.soon p { color: var(--on-surface-variant); max-width: 52ch; margin-top: 16px; font-size: 18px; }
+@media (max-width: 600px) { .soon { flex-direction: column; align-items: flex-start; border-radius: 36px; } }
 
 /* Contributors (constellation.js). Without JS the stars are a row of avatars. */
 .constellation { position: relative; display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; }

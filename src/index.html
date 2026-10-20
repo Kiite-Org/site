@@ -24,7 +24,6 @@
     <a href="#tour">Tour</a>
     <a href="#features">Features</a>
     <a href="#media">Shapes</a>
-    <a href="#install">Install</a>
     <a href="docs/">Docs</a>
   </nav>
   <a class="btn filled small" href="https://github.com/Kiite-Org/KiiteShell"><span class="sym">star</span>GitHub</a>
@@ -35,13 +34,13 @@
   <div class="wrap hero-grid">
     <div>
       <p class="label">Desktop shell for Hyprland</p>
+      <p class="status"><span class="dot"></span>In development: not released yet</p>
       <h1 class="display" style="margin-top:18px">Your desktop, <span class="accent">in every</span> <span class="pink">shape.</span></h1>
       <p class="lede">KiiteShell is a Material 3 Expressive shell written from scratch in Rust on GPUI. Bar, dock, launcher, lock screen, widgets and an AI assistant, all colored by your wallpaper.</p>
       <div class="ctas">
-        <a class="btn filled" href="#install"><span class="sym">download</span>Get Kiite</a>
+        <a class="btn filled" href="#tour"><span class="sym">play_arrow</span>Take the tour</a>
         <a class="btn tonal" href="docs/"><span class="sym">menu_book</span>Read the docs</a>
       </div>
-      <div class="chip-code"><span>git clone https://github.com/Kiite-Org/KiiteShell</span><button aria-label="Copy" data-copy="git clone https://github.com/Kiite-Org/KiiteShell"><span class="sym">content_copy</span></button></div>
     </div>
     <div class="stage">
       <m3-shape class="halo" shape="SoftBurst"></m3-shape>
@@ -146,25 +145,13 @@
   </div>
 </section>
 
-<section id="install">
+<section id="soon">
   <div class="wrap">
-    <div class="install">
-      <div class="head" style="margin:0">
-        <h2 class="display">Three steps in.</h2>
-        <p>Needs a Wayland session with Hyprland, a Vulkan driver and a stable Rust toolchain.</p>
-      </div>
-      <div class="steps">
-        <div class="step"><span class="num"><m3-shape shape="Cookie4Sided"></m3-shape><b>1</b></span><h3><a href="docs/install/">Clone and build →</a></h3>
-<pre><span class="k">git</span> clone https://github.com/Kiite-Org/KiiteShell
-<span class="k">cd</span> KiiteShell
-<span class="k">cargo</span> build --release</pre></div>
-        <div class="step"><span class="num"><m3-shape shape="Clover4Leaf"></m3-shape><b>2</b></span><h3><a href="docs/running/">Start it with Hyprland →</a></h3>
-<pre><span class="c"># hyprland.conf</span>
-exec-once = <span class="k">kiite</span></pre></div>
-        <div class="step"><span class="num"><m3-shape shape="Sunny"></m3-shape><b>3</b></span><h3><a href="docs/configuration/">Make it yours →</a></h3>
-<pre><span class="k">kiite</span> settings
-<span class="c"># or edit, it reloads live</span>
-~/.config/kiite/config.json</pre></div>
+    <div class="soon">
+      <m3-shape class="soon-shape" shape="Cookie12Sided" morph="Flower,Clover8Leaf,SoftBurst" interval="2800" aria-hidden="true"></m3-shape>
+      <div>
+        <h2 class="display">Not out yet.</h2>
+        <p>KiiteShell is still in development and hasn't been released, so there's nothing to install yet. Until then, take the tour or read the docs to see how it works.</p>
       </div>
     </div>
   </div>
@@ -185,7 +172,7 @@ exec-once = <span class="k">kiite</span></pre></div>
 
 <section id="docs">
   <div class="wrap">
-    <div class="head"><h2 class="display">Read the docs.</h2><p>Installing, configuring, and how each part of the shell works. <a href="docs/" style="color:var(--primary);font-weight:650">All docs →</a></p></div>
+    <div class="head"><h2 class="display">Read the docs.</h2><p>Configuring the shell, and how each part of it works. <a href="docs/" style="color:var(--primary);font-weight:650">All docs →</a></p></div>
     <div class="docs">
 <!-- @docs-cards -->
     </div>

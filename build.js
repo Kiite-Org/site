@@ -28,8 +28,6 @@ const NAV = [
   {
     group: "Get started", shape: "Cookie4Sided", rail: "start",
     pages: [
-      { slug: "install", title: "Install", readme: ["Requirements", "Building"], icon: "download",
-        blurb: "What the shell needs, every optional tool it can use, and how to build it." },
       { slug: "running", title: "Running the shell", readme: ["Running the shell"], icon: "play_circle",
         blurb: "Starting Kiite from Hyprland, and the other commands the binary takes." },
       { slug: "configuration", title: "Configuration", readme: ["Configuration"], icon: "tune",
@@ -87,7 +85,7 @@ const NAV = [
 
 // Docs linked from the landing page: slug, shape, hover shape.
 const LANDING_DOCS = [
-  ["install", "Cookie7Sided", "Flower"], ["configuration", "Gem", "Diamond"], ["launcher", "Puffy", "PuffyDiamond"],
+  ["keybindings", "Cookie7Sided", "Flower"], ["configuration", "Gem", "Diamond"], ["launcher", "Puffy", "PuffyDiamond"],
   ["desktop", "Arch", "Fan"], ["lock-screen", "Bun", "Pill"], ["kiite-drop", "Clover4Leaf", "Cookie4Sided"],
   ["nothing-x", "Pill", "Bun"], ["architecture", "Sunny", "VerySunny"],
 ];
@@ -324,7 +322,7 @@ ${FONTS}
     <button class="fab" id="search-fab" aria-label="Search the docs" data-hover-root><m3-shape shape="Cookie4Sided" hover="Clover4Leaf"></m3-shape><span class="sym">search</span></button>
     <div style="height:16px"></div>
     ${railLink("home", root, "home", "Home")}
-    ${railLink("start", `${root}docs/install/`, "rocket_launch", "Start")}
+    ${railLink("start", `${root}docs/${NAV[0].pages[0].slug}/`, "rocket_launch", "Start")}
     ${railLink("docs", `${root}docs/`, "menu_book", "Docs")}
     ${railLink("develop", `${root}docs/architecture/`, "code_blocks", "Develop")}
     <span class="spacer"></span>
@@ -416,7 +414,7 @@ const cardHover = (g, i) => (cardShape(g, i) === g.shape ? "SoftBurst" : g.shape
 function docsHome() {
   const root = "../";
   const content = `        ${hero({ eyebrowIcon: "menu_book", eyebrow: "Documentation", title: "Kiite Docs", cls: "home-hero",
-    lede: "Installing and configuring KiiteShell, how each part of it works, and how it's put together.",
+    lede: "Configuring KiiteShell, how each part of it works, and how it's put together. KiiteShell hasn't been released yet, so these describe the shell in development.",
     shapes: ["Cookie12Sided", "Flower", "Clover4Leaf", "Heart", "VerySunny"] })}
         <div class="groups">
           ${NAV.map((g) => `<section class="group">
@@ -430,7 +428,7 @@ function docsHome() {
         </div>`;
   return shell({
     root, title: "Kiite Docs", rail: "docs", content, rel: "docs/",
-    description: "Installing and configuring KiiteShell, how each part of it works, and how it's put together.",
+    description: "Configuring KiiteShell, how each part of it works, and how it's put together.",
   });
 }
 
